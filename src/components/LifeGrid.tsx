@@ -32,7 +32,6 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
       birthDate.getDate()
     );
 
-    // Normalize all dates to start of day for accurate comparison
     weekStart.setHours(0, 0, 0, 0);
     weekEnd.setHours(23, 59, 59, 999);
     birthday.setHours(12, 0, 0, 0);
@@ -45,7 +44,6 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
     const weekStart = new Date(weekTimestamp);
     const weekEnd = new Date(weekTimestamp + 6 * 24 * 60 * 60 * 1000);
     
-    // Normalize dates to start/end of day
     weekStart.setHours(0, 0, 0, 0);
     weekEnd.setHours(23, 59, 59, 999);
     
@@ -97,7 +95,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
             Lived Weeks
           </span>
           <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full ring-2 ring-emerald-400 ring-inset mr-2"></div>
+            <div className="w-2 h-2 rounded-full birthday-gradient mr-2"></div>
             Birthday Weeks
           </span>
           <span className="flex items-center">
@@ -151,15 +149,14 @@ ${formatDate(start)} to ${formatDate(end)}`;
                       const baseClass = status === 'lived' ? 'bg-gray-400' :
                                       status === 'current' ? 'animate-pulse-emerald' :
                                       status === 'death' ? 'animate-pulse-rose' :
+                                      status === 'birthday' ? 'birthday-gradient' :
                                       'bg-gray-700';
 
                       return (
                         <div
                           key={weekIndex}
                           title={tooltipText}
-                          className={`w-2 h-2 rounded-full ${baseClass} ${
-                            status === 'birthday' ? 'ring-2 ring-emerald-400 ring-inset' : ''
-                          }`}
+                          className={`w-2 h-2 rounded-full ${baseClass}`}
                         />
                       );
                     })}

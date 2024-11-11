@@ -31,3 +31,7 @@
 .animate-pulse-rose {
   animation: pulse-rose 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+.birthday-gradient {
+  background: linear-gradient(180deg, #5ffbf1, #ff00bf);
+}
