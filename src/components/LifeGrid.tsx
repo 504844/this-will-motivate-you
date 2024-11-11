@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ToggleLeft, ToggleRight } from 'lucide-react';
 
 interface LifeGridProps {
   birthDate: Date;
@@ -10,6 +11,15 @@ const WEEKS_PER_ROW = 4;
 const YEARS_PER_ROW = 13;
 
 const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
+  const [showYears, setShowYears] = useState(() => {
+    const saved = localStorage.getItem('showYears');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('showYears', JSON.stringify(showYears));
+  }, [showYears]);
+
   const now = new Date();
   const totalWeeks = lifeExpectancy * WEEKS_IN_YEAR;
   
@@ -103,39 +113,59 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
             Life Expectancy
           </span>
         </div>
-        <p className="text-gray-400 text-center text-sm">
-          Each block of bubbles below represents one year of your life
-        </p>
+        <div className="flex justify-between items-center">
+          <p className="text-gray-400 text-sm">
+            Each block of bubbles below represents one year of your life
+          </p>
+          <button
+            onClick={() => setShowYears(!showYears)}
+            className="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors"
+          >
+            {showYears ? (
+              <ToggleRight className="w-6 h-6" />
+            ) : (
+              <ToggleLeft className="w-6 h-6" />
+            )}
+            <span className="text-sm">Show years</span>
+          </button>
+        </div>
       </div>
 
       {yearRows.map((yearRow, rowIndex) => (
         <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-13 gap-6">
           {yearRow.map(({ yearIndex, weekRows }) => (
-            <div key={yearIndex} className="grid grid-cols-4 gap-1">
-              {weekRows.map((row, rowIndex) => (
-                <React.Fragment key={rowIndex}>
-                  {row.map(({ status, weekIndex }) => {
-                    const { start, end } = getWeekDate(weekIndex);
-                    const tooltipText = `Year ${Math.floor(weekIndex / WEEKS_IN_YEAR)}, Week ${(weekIndex % WEEKS_IN_YEAR) + 1}
+            <div key={yearIndex} className="space-y-2">
+              {showYears && (
+                <div className="text-gray-500 text-xs text-center">
+                  Year {yearIndex}
+                </div>
+              )}
+              <div className="grid grid-cols-4 gap-1">
+                {weekRows.map((row, rowIndex) => (
+                  <React.Fragment key={rowIndex}>
+                    {row.map(({ status, weekIndex }) => {
+                      const { start, end } = getWeekDate(weekIndex);
+                      const tooltipText = `Year ${Math.floor(weekIndex / WEEKS_IN_YEAR)}, Week ${(weekIndex % WEEKS_IN_YEAR) + 1}
 ${formatDate(start)} to ${formatDate(end)}`;
 
-                    const baseClass = status === 'lived' ? 'bg-gray-400' :
-                                    status === 'current' ? 'animate-pulse-emerald' :
-                                    status === 'death' ? 'animate-pulse-rose' :
-                                    'bg-gray-700';
+                      const baseClass = status === 'lived' ? 'bg-gray-400' :
+                                      status === 'current' ? 'animate-pulse-emerald' :
+                                      status === 'death' ? 'animate-pulse-rose' :
+                                      'bg-gray-700';
 
-                    return (
-                      <div
-                        key={weekIndex}
-                        title={tooltipText}
-                        className={`w-2 h-2 rounded-full ${baseClass} ${
-                          status === 'birthday' ? 'ring-2 ring-emerald-400 ring-inset' : ''
-                        }`}
-                      />
-                    );
-                  })}
-                </React.Fragment>
-              ))}
+                      return (
+                        <div
+                          key={weekIndex}
+                          title={tooltipText}
+                          className={`w-2 h-2 rounded-full ${baseClass} ${
+                            status === 'birthday' ? 'ring-2 ring-emerald-400 ring-inset' : ''
+                          }`}
+                        />
+                      );
+                    })}
+                  </React.Fragment>
+                ))}
+              </div>
             </div>
           ))}
         </div>
