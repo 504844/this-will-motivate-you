@@ -24,7 +24,7 @@ const loadSettings = (): UserSettings => {
   // First check URL parameters
   const params = new URLSearchParams(window.location.search);
   if (params.has('d')) {
-    const decoded = decodeSettings(params.get('d') || '');
+    const decoded = decodeSettings(params.get('j') || '');
     if (decoded) {
       return decoded;
     }
