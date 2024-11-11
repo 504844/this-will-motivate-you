@@ -111,7 +111,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
             Life Expectancy
           </span>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
           <p className="text-gray-400 text-sm">
             Each block of bubbles below represents one year of your life
           </p>
