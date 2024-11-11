@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+
+interface UserSettings {
+  name: string;
+  gender: string;
+  birthDate: Date;
+  lifeExpectancy: number;
+}
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (settings: {
-    name: string;
-    gender: string;
-    birthDate: Date;
-    lifeExpectancy: number;
-  }) => void;
+  onSave: (settings: UserSettings) => void;
+  initialSettings: UserSettings;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave }) => {
-  const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
-  const [lifeExpectancy, setLifeExpectancy] = useState('80');
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, initialSettings }) => {
+  const [name, setName] = useState(initialSettings.name);
+  const [gender, setGender] = useState(initialSettings.gender);
+  const [lifeExpectancy, setLifeExpectancy] = useState(String(initialSettings.lifeExpectancy));
+  
+  const [year, setYear] = useState(initialSettings.birthDate.getFullYear().toString());
+  const [month, setMonth] = useState((initialSettings.birthDate.getMonth() + 1).toString().padStart(2, '0'));
+  const [day, setDay] = useState(initialSettings.birthDate.getDate().toString().padStart(2, '0'));
+
+  useEffect(() => {
+    if (isOpen) {
+      setName(initialSettings.name);
+      setGender(initialSettings.gender);
+      setLifeExpectancy(String(initialSettings.lifeExpectancy));
+      setYear(initialSettings.birthDate.getFullYear().toString());
+      setMonth((initialSettings.birthDate.getMonth() + 1).toString().padStart(2, '0'));
+      setDay(initialSettings.birthDate.getDate().toString().padStart(2, '0'));
+    }
+  }, [isOpen, initialSettings]);
 
   if (!isOpen) return null;
 

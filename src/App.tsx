@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hourglass } from 'lucide-react';
 import LifeGrid from './components/LifeGrid';
 import SettingsModal from './components/SettingsModal';
@@ -11,14 +11,32 @@ interface UserSettings {
   lifeExpectancy: number;
 }
 
+const DEFAULT_SETTINGS: UserSettings = {
+  name: 'Martin',
+  gender: 'male',
+  birthDate: new Date('1993-12-04'),
+  lifeExpectancy: 80
+};
+
+const loadSettings = (): UserSettings => {
+  const saved = localStorage.getItem('userSettings');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    return {
+      ...parsed,
+      birthDate: new Date(parsed.birthDate)
+    };
+  }
+  return DEFAULT_SETTINGS;
+};
+
 const App: React.FC = () => {
-  const [settings, setSettings] = useState<UserSettings>({
-    name: 'Martin',
-    gender: 'male',
-    birthDate: new Date('1993-12-04'),
-    lifeExpectancy: 80
-  });
+  const [settings, setSettings] = useState<UserSettings>(loadSettings);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+  }, [settings]);
 
   const calculateWeeksLeft = (birthDate: Date, lifeExpectancy: number) => {
     const now = new Date();
@@ -55,6 +73,7 @@ const App: React.FC = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSave={setSettings}
+          initialSettings={settings}
         />
 
         <div className="mt-8">
