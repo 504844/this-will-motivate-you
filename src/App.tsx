@@ -22,9 +22,9 @@ const DEFAULT_SETTINGS: UserSettings = {
 
 const loadSettings = (): UserSettings => {
   // First check URL parameters
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('j')) {
-    const decoded = decodeSettings(params.get('j') || '');
+  const path = window.location.pathname.slice(1);
+  if (path) {
+    const decoded = decodeSettings(path);
     if (decoded) {
       return decoded;
     }

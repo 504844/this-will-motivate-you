@@ -27,9 +27,7 @@ const encodeSettings = (settings: {
 
   // Combine both numbers and convert to base36
   const combined = (BigInt(packed) << 64n) | BigInt(nameNum);
-  const encoded = combined.toString(36).padStart(6, '0');
-
-  return `yjiw-${encoded.slice(-6)}`;
+  return combined.toString(36).padStart(6, '0').slice(-6);
 };
 
 const decodeSettings = (encoded: string): {
@@ -39,12 +37,7 @@ const decodeSettings = (encoded: string): {
   lifeExpectancy: number;
 } | null => {
   try {
-    if (!encoded.startsWith('yjiw-')) {
-      return null;
-    }
-
-    const code = encoded.slice(5);
-    const combined = BigInt('0x' + parseInt(code, 36).toString(16));
+    const combined = BigInt('0x' + parseInt(encoded, 36).toString(16));
     
     const packed = Number(combined >> 64n);
     const nameNum = Number(combined & ((1n << 64n) - 1n));
