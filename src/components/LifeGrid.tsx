@@ -116,8 +116,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
                 <React.Fragment key={rowIndex}>
                   {row.map(({ status, weekIndex }) => {
                     const { start, end } = getWeekDate(weekIndex);
-                    const tooltipText = `Year ${Math.floor(weekIndex / WEEKS_IN_YEAR)}
-Week ${(weekIndex % WEEKS_IN_YEAR) + 1}
+                    const tooltipText = `Year ${Math.floor(weekIndex / WEEKS_IN_YEAR)}, Week ${(weekIndex % WEEKS_IN_YEAR) + 1}
 ${formatDate(start)} to ${formatDate(end)}`;
 
                     const baseClass = status === 'lived' ? 'bg-gray-400' :
