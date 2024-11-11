@@ -2,16 +2,17 @@
 
 A beautiful, minimalist visualization of your life in weeks, inspired by the concept that seeing your life laid out in weeks can help you make the most of your time.
 
-![Life in Weeks Preview](https://i.imgur.com/ehpPfvi.png)
+![Life in Weeks Preview](https://i.imgur.com/wspDxYq.png)
 
 ## Features
 
 - 📊 Visual representation of your life in weeks
 - 🎯 Progress bar showing percentage of life lived
 - 🎨 Elegant dark theme design
-- 📱 Fully responsive layout
+- 🔄 Toggle year labels
+- 📎 Share your journey with others via URL
+- 💾 Persistent settings with localStorage
 - ⚡ Built with React and TypeScript
-- 🎭 Smooth animations and transitions
 
 ## Live Demo
 
