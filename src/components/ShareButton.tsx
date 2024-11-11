@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Share2, Check, Copy } from 'lucide-react';
+import { Check, Share2 } from 'lucide-react';
+import { encodeSettings } from '../utils/urlEncoder';
 
 interface ShareButtonProps {
   settings: {
@@ -14,36 +15,14 @@ const ShareButton: React.FC<ShareButtonProps> = ({ settings }) => {
   const [copied, setCopied] = useState(false);
 
   const generateShareUrl = () => {
-    const params = new URLSearchParams({
-      name: settings.name,
-      gender: settings.gender,
-      birthDate: settings.birthDate.toISOString(),
-      lifeExpectancy: settings.lifeExpectancy.toString()
-    });
-    return `${window.location.origin}?${params.toString()}`;
+    const encoded = encodeSettings(settings);
+    return `${window.location.origin}?d=${encoded}`;
   };
 
   const handleShare = async () => {
     const shareUrl = generateShareUrl();
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My Life Journey',
-          text: `Check out ${settings.name}'s life journey in weeks!`,
-          url: shareUrl
-        });
-      } catch (err) {
-        copyToClipboard(shareUrl);
-      }
-    } else {
-      copyToClipboard(shareUrl);
-    }
-  };
-
-  const copyToClipboard = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -54,18 +33,17 @@ const ShareButton: React.FC<ShareButtonProps> = ({ settings }) => {
   return (
     <button
       onClick={handleShare}
-      className="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors"
-      title="Share your journey"
+      className="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors mx-auto"
     >
       {copied ? (
         <>
-          <Check className="w-5 h-5" />
-          <span className="text-sm">Copied!</span>
+          <Check className="w-6 h-6" />
+          <span className="text-sm">Copied to clipboard!</span>
         </>
       ) : (
         <>
-          <Share2 className="w-5 h-5" />
-          <span className="text-sm">Share</span>
+          <Share2 className="w-6 h-6" />
+          <span className="text-sm">Share your journey</span>
         </>
       )}
     </button>

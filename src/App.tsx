@@ -4,6 +4,7 @@ import LifeGrid from './components/LifeGrid';
 import SettingsModal from './components/SettingsModal';
 import LifeProgressBar from './components/LifeProgressBar';
 import ShareButton from './components/ShareButton';
+import { decodeSettings } from './utils/urlEncoder';
 
 interface UserSettings {
   name: string;
@@ -22,13 +23,11 @@ const DEFAULT_SETTINGS: UserSettings = {
 const loadSettings = (): UserSettings => {
   // First check URL parameters
   const params = new URLSearchParams(window.location.search);
-  if (params.has('name')) {
-    return {
-      name: params.get('name') || DEFAULT_SETTINGS.name,
-      gender: params.get('gender') || DEFAULT_SETTINGS.gender,
-      birthDate: new Date(params.get('birthDate') || DEFAULT_SETTINGS.birthDate),
-      lifeExpectancy: Number(params.get('lifeExpectancy')) || DEFAULT_SETTINGS.lifeExpectancy
-    };
+  if (params.has('d')) {
+    const decoded = decodeSettings(params.get('d') || '');
+    if (decoded) {
+      return decoded;
+    }
   }
 
   // If no URL parameters, check localStorage
@@ -69,21 +68,21 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-black py-12 px-4 text-gray-100">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-4xl font-bold text-white">Your journey in weeks</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Your journey in weeks</h1>
+          <div className="space-y-4">
+            <p className="text-xl text-white">
+              {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
+              Make them unforgettable! ❤️{' '}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="font-bold text-yellow-400 opacity-100 dark:text-yellow-300 hover:opacity-70"
+              >
+                (Not {settings.name}?)
+              </button>
+            </p>
             <ShareButton settings={settings} />
           </div>
-          <p className="text-xl text-white mb-6">
-            {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
-            Make them unforgettable! ❤️{' '}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="font-bold text-yellow-400 opacity-100 dark:text-yellow-300 hover:opacity-70"
-            >
-              (Not {settings.name}?)
-            </button>
-          </p>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto mt-6">
             <LifeProgressBar
               birthDate={settings.birthDate}
               lifeExpectancy={settings.lifeExpectancy}
