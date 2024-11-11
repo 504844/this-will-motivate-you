@@ -16,13 +16,12 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, initialSettings }) => {
-  const [name, setName] = useState(initialSettings.name);
-  const [gender, setGender] = useState(initialSettings.gender);
-  const [lifeExpectancy, setLifeExpectancy] = useState(String(initialSettings.lifeExpectancy));
-  
-  const [year, setYear] = useState(initialSettings.birthDate.getFullYear().toString());
-  const [month, setMonth] = useState((initialSettings.birthDate.getMonth() + 1).toString().padStart(2, '0'));
-  const [day, setDay] = useState(initialSettings.birthDate.getDate().toString().padStart(2, '0'));
+  const [name, setName] = useState('');
+  const [gender, setGender] = useState('');
+  const [lifeExpectancy, setLifeExpectancy] = useState('');
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
 
   useEffect(() => {
     if (isOpen) {
