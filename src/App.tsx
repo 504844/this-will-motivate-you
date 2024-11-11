@@ -21,19 +21,16 @@ const DEFAULT_SETTINGS: UserSettings = {
 };
 
 const loadSettings = (): UserSettings => {
-  // Check URL parameters for encoded settings
+  // First check URL parameters
   const params = new URLSearchParams(window.location.search);
-  if (params.has('j')) {
-    const encoded = params.get('j');
-    if (encoded && encoded.length === 10) {
-      const decoded = decodeSettings(encoded);
-      if (decoded) {
-        return decoded;
-      }
+  if (params.has('d')) {
+    const decoded = decodeSettings(params.get('d') || '');
+    if (decoded) {
+      return decoded;
     }
   }
 
-  // If no valid URL encoding, check localStorage
+  // If no URL parameters, check localStorage
   const saved = localStorage.getItem('userSettings');
   if (saved) {
     const parsed = JSON.parse(saved);
@@ -71,13 +68,11 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-black py-12 px-4 text-gray-100">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Your journey in weeks
-          </h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Your journey in weeks</h1>
           <div className="space-y-4">
             <p className="text-xl text-white">
-              {settings.name}, you have {weeksLeft.toLocaleString()} weeks
-              ahead. Make them unforgettable! ❤️{' '}
+              {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
+              Make them unforgettable! ❤️{' '}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="font-bold text-yellow-400 opacity-100 dark:text-yellow-300 hover:opacity-70"
