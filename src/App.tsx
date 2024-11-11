@@ -60,8 +60,8 @@ const App: React.FC = () => {
             Your journey in weeks
           </h1>
           <p className="text-xl text-white mb-6">
-            {settings.name}, you have {weeksLeft.toLocaleString()} weeks left.
-            Make them count 🫡{' '}
+            {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
+            Make them unforgettable! ❤️{' '}
             <button
               onClick={() => setIsModalOpen(true)}
               className="font-bold text-yellow-400 opacity-100 dark:text-yellow-300 hover:opacity-70"
