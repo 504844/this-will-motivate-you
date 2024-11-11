@@ -130,15 +130,15 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
       </div>
 
       {yearRows.map((yearRow, rowIndex) => (
-        <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-13 gap-6">
+        <div key={rowIndex} className="grid grid-cols-13 gap-1 md:gap-6">
           {yearRow.map(({ yearIndex, weekRows }) => (
-            <div key={yearIndex} className="space-y-2">
+            <div key={yearIndex} className="space-y-1">
               {showYears && (
                 <div className="text-gray-500 text-xs text-center">
                   Year {yearIndex}
                 </div>
               )}
-              <div className="grid grid-cols-4 gap-1">
+              <div className="grid grid-cols-4 gap-[0.5px] md:gap-1">
                 {weekRows.map((row, rowIndex) => (
                   <React.Fragment key={rowIndex}>
                     {row.map(({ status, weekIndex }) => {
@@ -156,7 +156,7 @@ ${formatDate(start)} to ${formatDate(end)}`;
                         <div
                           key={weekIndex}
                           title={tooltipText}
-                          className={`w-2 h-2 rounded-full ${baseClass}`}
+                          className={`w-[3px] h-[3px] md:w-2 md:h-2 rounded-full ${baseClass}`}
                         />
                       );
                     })}
