@@ -21,12 +21,15 @@ const DEFAULT_SETTINGS: UserSettings = {
 };
 
 const loadSettings = (): UserSettings => {
-  // Check pathname for encoded settings
-  const path = window.location.pathname.slice(1); // Remove leading slash
-  if (path && path.length === 10) {
-    const decoded = decodeSettings(path);
-    if (decoded) {
-      return decoded;
+  // Check URL parameters for encoded settings
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('j')) {
+    const encoded = params.get('j');
+    if (encoded && encoded.length === 10) {
+      const decoded = decodeSettings(encoded);
+      if (decoded) {
+        return decoded;
+      }
     }
   }
 
