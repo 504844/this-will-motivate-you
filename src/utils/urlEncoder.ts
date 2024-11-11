@@ -4,30 +4,27 @@ const encodeSettings = (settings: {
   birthDate: Date;
   lifeExpectancy: number;
 }): string => {
-  // Convert gender to 2 bits
-  const genderBits = { male: 0, female: 1, other: 2 }[settings.gender] || 2;
+  // Convert gender to number
+  const genderMap: { [key: string]: number } = { male: 0, female: 1, other: 2 };
   
-  // Pack all data into a single 32-bit number
-  const yearOffset = settings.birthDate.getFullYear() - 1900;
-  const month = settings.birthDate.getMonth();
-  const day = settings.birthDate.getDate();
+  // Convert all data to numbers where possible
+  const date = settings.birthDate;
+  const nums = [
+    genderMap[settings.gender] || 2,
+    date.getFullYear() - 1900, // Use offset from 1900 to save digits
+    date.getMonth(),
+    date.getDate(),
+    settings.lifeExpectancy
+  ];
+
+  // Convert numbers to base36 for maximum compression
+  const encoded = nums.map(n => n.toString(36)).join('') + '.' + settings.name;
   
-  // Pack bits into a single number
-  const packed = 
-    (genderBits << 30) |           // 2 bits for gender
-    (yearOffset << 23) |           // 7 bits for year (0-127)
-    (month << 19) |                // 4 bits for month (0-11)
-    (day << 14) |                  // 5 bits for day (1-31)
-    (settings.lifeExpectancy << 7) | // 7 bits for life expectancy (0-127)
-    (settings.name.length & 0x7F);   // 7 bits for name length
-
-  // Convert name to number using char codes
-  const nameNum = settings.name.split('')
-    .reduce((acc, char) => acc * 37 + (char.charCodeAt(0) % 37), 0);
-
-  // Combine both numbers and convert to base36
-  const combined = (BigInt(packed) << 64n) | BigInt(nameNum);
-  return combined.toString(36).padStart(6, '0').slice(-6);
+  // Use URL-safe base64 encoding
+  return btoa(encoded)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 };
 
 const decodeSettings = (encoded: string): {
@@ -37,36 +34,28 @@ const decodeSettings = (encoded: string): {
   lifeExpectancy: number;
 } | null => {
   try {
-    const combined = BigInt('0x' + parseInt(encoded, 36).toString(16));
+    // Restore base64 characters
+    const base64 = encoded
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
     
-    const packed = Number(combined >> 64n);
-    const nameNum = Number(combined & ((1n << 64n) - 1n));
+    const decoded = atob(base64);
+    const [numbers, name] = decoded.split('.');
 
-    // Extract components
-    const genderBits = (packed >> 30) & 0x3;
-    const yearOffset = (packed >> 23) & 0x7F;
-    const month = (packed >> 19) & 0xF;
-    const day = (packed >> 14) & 0x1F;
-    const lifeExpectancy = (packed >> 7) & 0x7F;
-    const nameLength = packed & 0x7F;
+    // Parse the fixed-width number string
+    const genderNum = parseInt(numbers[0], 36);
+    const year = parseInt(numbers.slice(1, 3), 36) + 1900;
+    const month = parseInt(numbers.slice(3, 4), 36);
+    const day = parseInt(numbers.slice(4, 5), 36);
+    const lifeExpectancy = parseInt(numbers.slice(5), 36);
 
     // Convert gender back to string
-    const genderMap = ['male', 'female', 'other'];
-    const gender = genderMap[genderBits] || 'other';
-
-    // Reconstruct name
-    let remainingNameNum = nameNum;
-    let name = '';
-    for (let i = 0; i < nameLength; i++) {
-      const charCode = (remainingNameNum % 37) + 65;
-      name = String.fromCharCode(charCode) + name;
-      remainingNameNum = Math.floor(remainingNameNum / 37);
-    }
+    const genderMap: { [key: number]: string } = { 0: 'male', 1: 'female', 2: 'other' };
 
     return {
       name,
-      gender,
-      birthDate: new Date(yearOffset + 1900, month, day),
+      gender: genderMap[genderNum] || 'other',
+      birthDate: new Date(year, month, day),
       lifeExpectancy
     };
   } catch (e) {

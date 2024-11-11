@@ -16,7 +16,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ settings }) => {
 
   const generateShareUrl = () => {
     const encoded = encodeSettings(settings);
-    return `${window.location.origin}/${encoded}`;
+    return `${window.location.origin}?j=${encoded}`;
   };
 
   const handleShare = async () => {
