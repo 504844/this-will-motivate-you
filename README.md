@@ -2,7 +2,7 @@
 
 A beautiful, minimalist visualization of your life in weeks, inspired by the concept that seeing your life laid out in weeks can help you make the most of your time.
 
-![Life in Weeks Preview](https://i.imgur.com/XYZ123.png)
+![Life in Weeks Preview](https://i.imgur.com/ehpPfvi.png)
 
 ## Features
 
@@ -15,7 +15,7 @@ A beautiful, minimalist visualization of your life in weeks, inspired by the con
 
 ## Live Demo
 
-Check out the live demo: [Your Journey in Weeks](https://cerulean-pasca-ae545e.netlify.app)
+Check out the live demo: [Your Journey in Weeks](https://this-will-motivate-you.netlify.app/)
 
 ## Technology Stack
 
@@ -29,7 +29,7 @@ Check out the live demo: [Your Journey in Weeks](https://cerulean-pasca-ae545e.n
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/your-journey-in-weeks.git
+git clone https://github.com/504844/this-will-motivate-you.git
 ```
 
 2. Install dependencies:
@@ -66,12 +66,3 @@ MIT License - feel free to use this project for personal or commercial purposes.
 
 - Inspired by Tim Urban's "Your Life in Weeks"
 - Icons by Lucide React
-- Built with ❤️ using modern web technologies
-
-## Author
-
-[Your Name] - [Your Website/GitHub]
-
----
-
-Made with ⚡ by [Your Name]
