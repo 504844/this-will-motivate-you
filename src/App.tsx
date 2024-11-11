@@ -3,6 +3,7 @@ import { Hourglass } from 'lucide-react';
 import LifeGrid from './components/LifeGrid';
 import SettingsModal from './components/SettingsModal';
 import LifeProgressBar from './components/LifeProgressBar';
+import ShareButton from './components/ShareButton';
 
 interface UserSettings {
   name: string;
@@ -19,6 +20,18 @@ const DEFAULT_SETTINGS: UserSettings = {
 };
 
 const loadSettings = (): UserSettings => {
+  // First check URL parameters
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('name')) {
+    return {
+      name: params.get('name') || DEFAULT_SETTINGS.name,
+      gender: params.get('gender') || DEFAULT_SETTINGS.gender,
+      birthDate: new Date(params.get('birthDate') || DEFAULT_SETTINGS.birthDate),
+      lifeExpectancy: Number(params.get('lifeExpectancy')) || DEFAULT_SETTINGS.lifeExpectancy
+    };
+  }
+
+  // If no URL parameters, check localStorage
   const saved = localStorage.getItem('userSettings');
   if (saved) {
     const parsed = JSON.parse(saved);
@@ -56,9 +69,10 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-black py-12 px-4 text-gray-100">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Your journey in weeks
-          </h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-4xl font-bold text-white">Your journey in weeks</h1>
+            <ShareButton settings={settings} />
+          </div>
           <p className="text-xl text-white mb-6">
             {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
             Make them unforgettable! ❤️{' '}
