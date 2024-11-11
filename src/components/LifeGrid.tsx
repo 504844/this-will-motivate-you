@@ -31,7 +31,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
       birthDate.getMonth(),
       birthDate.getDate()
     );
-
+    
     weekStart.setHours(0, 0, 0, 0);
     weekEnd.setHours(23, 59, 59, 999);
     birthday.setHours(12, 0, 0, 0);
@@ -88,7 +88,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
 
   return (
     <div className="space-y-8 max-w-[95vw] mx-auto p-4">
-      <div className="mb-6 space-y-4">
+      <div className="mb-6 space-y-4 sticky top-0 bg-black/80 backdrop-blur-sm pt-4 pb-6 z-10">
         <div className="flex justify-center space-x-4 text-gray-400 flex-wrap gap-y-2">
           <span className="flex items-center">
             <div className="w-2 h-2 rounded-full bg-gray-400 mr-2"></div>
