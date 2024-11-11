@@ -77,29 +77,6 @@ const App: React.FC = () => {
         />
 
         <div className="mt-8">
-          <div className="mb-6 space-y-4">
-            <div className="flex justify-center space-x-4 text-gray-400">
-              <span className="flex items-center">
-                <div className="w-2 h-2 rounded-full bg-gray-400 mr-2"></div>
-                Lived Weeks
-              </span>
-              <span className="flex items-center">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse-emerald"></div>
-                Current Week
-              </span>
-              <span className="flex items-center">
-                <div className="w-2 h-2 rounded-full bg-gray-700 mr-2"></div>
-                Future Weeks
-              </span>
-              <span className="flex items-center">
-                <div className="w-2 h-2 rounded-full bg-red-500 mr-2 animate-pulse-rose"></div>
-                Life Expectancy
-              </span>
-            </div>
-            <p className="text-gray-400 text-center text-sm">
-              Each block of bubbles below represents one year of your life
-            </p>
-          </div>
           <LifeGrid
             birthDate={settings.birthDate}
             lifeExpectancy={settings.lifeExpectancy}

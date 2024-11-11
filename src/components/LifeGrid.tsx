@@ -87,7 +87,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
             Lived Weeks
           </span>
           <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full bg-gray-400 ring-2 ring-emerald-400 ring-inset mr-2"></div>
+            <div className="w-2 h-2 rounded-full ring-2 ring-emerald-400 ring-inset mr-2"></div>
             Birthday Weeks
           </span>
           <span className="flex items-center">
