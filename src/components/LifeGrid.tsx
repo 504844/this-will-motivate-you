@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ToggleLeft, ToggleRight } from 'lucide-react';
 
 interface LifeGridProps {
@@ -16,12 +16,17 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
     return saved ? JSON.parse(saved) : false;
   });
 
-  useEffect(() => {
-    localStorage.setItem('showYears', JSON.stringify(showYears));
-  }, [showYears]);
-
   const now = new Date();
   const totalWeeks = lifeExpectancy * WEEKS_IN_YEAR;
+
+  const getCurrentWeekIndex = () => {
+    const weeksSinceBirth = Math.floor(
+      (now.getTime() - birthDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+    );
+    return weeksSinceBirth;
+  };
+
+  const currentWeekIndex = getCurrentWeekIndex();
   
   const isBirthdayWeek = (weekTimestamp: number): boolean => {
     const weekStart = new Date(weekTimestamp);
@@ -39,21 +44,6 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
     return birthday >= weekStart && birthday <= weekEnd;
   };
 
-  const getWeekDate = (weekIndex: number): { start: Date; end: Date } => {
-    const weekTimestamp = birthDate.getTime() + weekIndex * 7 * 24 * 60 * 60 * 1000;
-    const weekStart = new Date(weekTimestamp);
-    const weekEnd = new Date(weekTimestamp + 6 * 24 * 60 * 60 * 1000);
-    
-    weekStart.setHours(0, 0, 0, 0);
-    weekEnd.setHours(23, 59, 59, 999);
-    
-    return { start: weekStart, end: weekEnd };
-  };
-
-  const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0];
-  };
-  
   const getWeekStatus = (weekIndex: number) => {
     const weekTimestamp = birthDate.getTime() + weekIndex * 7 * 24 * 60 * 60 * 1000;
     const isCurrentWeek = weekTimestamp <= now.getTime() && 
@@ -88,45 +78,46 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
 
   return (
     <div className="space-y-8 max-w-[95vw] mx-auto p-4">
-      <div className="mb-6 space-y-4 sticky top-0 bg-black/80 backdrop-blur-sm pt-4 pb-6 z-10">
-        <div className="flex justify-center space-x-4 text-gray-400 flex-wrap gap-y-2">
-          <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full bg-gray-400 mr-2"></div>
-            Lived Weeks
+      <div className="sticky top-0 bg-black z-10 py-4">
+        <div className="flex justify-center items-center space-x-2 md:space-x-4 text-[10px] sm:text-xs md:text-sm text-gray-400">
+          <span className="flex items-center whitespace-nowrap">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gray-400 mr-1 md:mr-2"></div>
+            Lived
           </span>
-          <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full birthday-gradient mr-2"></div>
-            Birthday Weeks
+          <span className="flex items-center whitespace-nowrap">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#ff00bf] mr-1 md:mr-2"></div>
+            Birthday
           </span>
-          <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse-emerald"></div>
-            Current Week
+          <span className="flex items-center whitespace-nowrap">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-emerald-400 mr-1 md:mr-2 animate-pulse-emerald"></div>
+            Current
           </span>
-          <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full bg-gray-700 mr-2"></div>
-            Future Weeks
+          <span className="flex items-center whitespace-nowrap">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gray-700 mr-1 md:mr-2"></div>
+            Future
           </span>
-          <span className="flex items-center">
-            <div className="w-2 h-2 rounded-full bg-red-500 mr-2 animate-pulse-rose"></div>
-            Life Expectancy
+          <span className="flex items-center whitespace-nowrap">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-red-500 mr-1 md:mr-2 animate-pulse-rose"></div>
+            Death
           </span>
         </div>
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <p className="text-gray-400 text-sm">
-            Each block of bubbles below represents one year of your life
-          </p>
-          <button
-            onClick={() => setShowYears(!showYears)}
-            className="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors"
-          >
-            {showYears ? (
-              <ToggleRight className="w-6 h-6" />
-            ) : (
-              <ToggleLeft className="w-6 h-6" />
-            )}
-            <span className="text-sm">Show years</span>
-          </button>
-        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-8">
+        <p className="text-[10px] sm:text-xs md:text-sm text-gray-400">
+          Each block of bubbles below represents one year of your life
+        </p>
+        <button
+          onClick={() => setShowYears(!showYears)}
+          className="hidden md:flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors"
+        >
+          {showYears ? (
+            <ToggleRight className="w-6 h-6" />
+          ) : (
+            <ToggleLeft className="w-6 h-6" />
+          )}
+          <span className="text-sm">Show years</span>
+        </button>
       </div>
 
       {yearRows.map((yearRow, rowIndex) => (
@@ -134,7 +125,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
           {yearRow.map(({ yearIndex, weekRows }) => (
             <div key={yearIndex} className="space-y-1">
               {showYears && (
-                <div className="text-gray-500 text-xs text-center">
+                <div className="hidden md:block text-gray-500 text-xs text-center">
                   Year {yearIndex}
                 </div>
               )}
@@ -142,20 +133,15 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
                 {weekRows.map((row, rowIndex) => (
                   <React.Fragment key={rowIndex}>
                     {row.map(({ status, weekIndex }) => {
-                      const { start, end } = getWeekDate(weekIndex);
-                      const tooltipText = `Year ${Math.floor(weekIndex / WEEKS_IN_YEAR)}, Week ${(weekIndex % WEEKS_IN_YEAR) + 1}
-${formatDate(start)} to ${formatDate(end)}`;
-
                       const baseClass = status === 'lived' ? 'bg-gray-400' :
                                       status === 'current' ? 'animate-pulse-emerald' :
                                       status === 'death' ? 'animate-pulse-rose' :
-                                      status === 'birthday' ? 'birthday-gradient' :
+                                      status === 'birthday' ? 'bg-[#ff00bf]' :
                                       'bg-gray-700';
 
                       return (
                         <div
                           key={weekIndex}
-                          title={tooltipText}
                           className={`w-[3px] h-[3px] md:w-2 md:h-2 rounded-full ${baseClass}`}
                         />
                       );

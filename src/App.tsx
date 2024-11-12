@@ -21,16 +21,19 @@ const DEFAULT_SETTINGS: UserSettings = {
 };
 
 const loadSettings = (): UserSettings => {
-  // First check URL parameters
+  // Check URL parameters for encoded settings
   const params = new URLSearchParams(window.location.search);
   if (params.has('j')) {
-    const decoded = decodeSettings(params.get('j') || '');
-    if (decoded) {
-      return decoded;
+    const encoded = params.get('j');
+    if (encoded && encoded.length === 10) {
+      const decoded = decodeSettings(encoded);
+      if (decoded) {
+        return decoded;
+      }
     }
   }
 
-  // If no URL parameters, check localStorage
+  // If no valid URL encoding, check localStorage
   const saved = localStorage.getItem('userSettings');
   if (saved) {
     const parsed = JSON.parse(saved);
@@ -68,16 +71,19 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-black py-12 px-4 text-gray-100">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">Your journey in weeks</h1>
+          <h1 className="text-xl text-white mb-4 uppercase">
+            Your journey in weeks
+          </h1>
           <div className="space-y-4">
-            <p className="text-xl text-white">
+            <p className="text-4xl font-bold text-white">
               {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
+              <br />
               Make them unforgettable! ❤️{' '}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="font-bold text-yellow-400 opacity-100 dark:text-yellow-300 hover:opacity-70"
               >
-                (Not {settings.name}?)
+                (Not You?)
               </button>
             </p>
             <ShareButton settings={settings} />
