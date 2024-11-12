@@ -75,7 +75,7 @@ const App: React.FC = () => {
             Your journey in weeks
           </h1>
           <div className="space-y-4">
-            <p className="text-4xl font-bold text-white">
+            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
               {settings.name}, you have {weeksLeft.toLocaleString()} weeks ahead.
               <br />
               Make them unforgettable! ❤️{' '}
