@@ -187,7 +187,7 @@ const LifeGrid: React.FC<LifeGridProps> = ({ birthDate, lifeExpectancy }) => {
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-8">
         <p className="text-[10px] sm:text-xs md:text-sm text-gray-400">
-          Each block of bubbles below represents one year of your life. Click any future week to create a time capsule.
+          Each block of bubbles below represents one year of your life. <div className="text-indigo-500">Click any future week to create a time capsule.</div>
         </p>
         <button
           onClick={() => setShowYears(!showYears)}
